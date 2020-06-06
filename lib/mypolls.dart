@@ -20,19 +20,31 @@ class MyPolls extends StatelessWidget {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return Card(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Column(
-                            children: <Widget>[
-                              Card(
-                                child: Text(snapshot.data[index].question),
-                              ),
-                              Text(snapshot.data[index].option1),
-                              Text(snapshot.data[index].option2),
-                              Text(snapshot.data[index].option3 ?? 'None'),
-                              Text(snapshot.data[index].option4 ?? 'None'),
-                            ],
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(snapshot.data[index].question),
+                            Container(
+                                margin: EdgeInsets.fromLTRB(3, 3, 10, 3),
+                                width: double.infinity,
+                                child: Text(snapshot.data[index].option1)),
+                            Container(
+                                margin: EdgeInsets.fromLTRB(3, 3, 10, 3),
+                                width: double.infinity,
+                                child: Text(snapshot.data[index].option2)),
+                            Container(
+                                margin: EdgeInsets.fromLTRB(3, 3, 10, 3),
+                                width: double.infinity,
+                                child: snapshot.data[index].option3 != null
+                                    ? Text(snapshot.data[index].option3)
+                                    : Offstage()),
+                            Container(
+                                margin: EdgeInsets.fromLTRB(3, 3, 10, 3),
+                                width: double.infinity,
+                                child: snapshot.data[index].option4 != null
+                                    ? Text(snapshot.data[index].option4)
+                                    : Offstage())
+                          ],
                         ),
                       );
                     })
