@@ -7,53 +7,84 @@ class CreatePoll extends StatefulWidget {
 
 class _CreatePollState extends State<CreatePoll> {
   int _count = 1;
+  final _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     List<Widget> listOptions =
-    new List.generate(_count, (int i) => new OptionsList());
+        new List.generate(_count, (int i) => new OptionsList());
 
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Create Poll"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Create Poll"),
+        leading: GestureDetector(
+          onTap: () {
+            /* Write listener code here */
+          },
+          child: Icon(
+            Icons.menu, // add custom icons also
+          ),
         ),
-        body: new LayoutBuilder(builder: (context, constraint) {
-          return new Container(
-            child: new Column(
-              children: <Widget>[
-                new Container(
-                  padding: new EdgeInsets.all(20.0),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(
+                  Icons.search,
+                  size: 26.0,
                 ),
-                new TextFormField(
-                  decoration: new InputDecoration(
-                    labelText: 'Question',
+              )),
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(Icons.send),
+              )),
+        ],
+      ),
+      body: LayoutBuilder(builder: (context, constraint) {
+        return Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(20.0),
+              ),
+              textFormField(),
+              Container(
+                padding: EdgeInsets.all(20.0),
+              ),
+              Expanded(
+                child: Container(
+                  height: 200.0,
+                  child: ListView(
+                    shrinkWrap: false,
+                    children: listOptions,
+                    scrollDirection: Axis.vertical,
                   ),
                 ),
-                new Container(
-                  padding: new EdgeInsets.all(20.0),
+              ),
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: FlatButton(
+                  onPressed: _addNewOption,
+                  child: Icon(Icons.add),
                 ),
-                new Expanded(
-                  child: new Container(
-                    height: 200.0,
-                    child: new ListView(
-                      shrinkWrap: false,
-                      children: listOptions,
-                      scrollDirection: Axis.vertical,
-                    ),
-                  ),
-                ),
-                new Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: new FlatButton(
-                    onPressed: _addNewOption,
-                    child: new Icon(Icons.add),
-                  ),
-                ),
-                //new ContactRow()
-              ],
-            ),
-          );
-        }));
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget textFormField() {
+    return TextFormField(
+      controller: _textEditingController,
+      decoration: InputDecoration(
+          labelText: 'Question',
+          hintText: 'Who is best cricketer? #Cricket#ICC'),
+    );
   }
 
   void _addNewOption() {
@@ -61,7 +92,6 @@ class _CreatePollState extends State<CreatePoll> {
       _count = _count + 1;
     });
   }
-  
 }
 
 class OptionsList extends StatefulWidget {
@@ -72,19 +102,22 @@ class OptionsList extends StatefulWidget {
 class _OptionsList extends State<OptionsList> {
   @override
   Widget build(BuildContext context) {
-    return new Container(
-        width: 170.0,
-        padding: new EdgeInsets.all(5.0),
-        child: new Column(children: <Widget>[
-          new TextFormField(
-            decoration: new InputDecoration(
+    return Container(
+      width: 170.0,
+      padding: EdgeInsets.all(5.0),
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(
               labelText: 'Option',
             ),
           ),
-          new Container(
-            padding: new EdgeInsets.all(20.0),
+          Container(
+            padding: EdgeInsets.all(20.0),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 
   @override
