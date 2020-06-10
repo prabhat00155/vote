@@ -5,9 +5,19 @@ class CreatePoll extends StatefulWidget {
   _CreatePollState createState() => _CreatePollState();
 }
 
+int _count = 1;
+List<String> optionsList = new List();
+String question = '';
+
 class _CreatePollState extends State<CreatePoll> {
-  int _count = 1;
   final _textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +41,7 @@ class _CreatePollState extends State<CreatePoll> {
               child: GestureDetector(
                 onTap: () {},
                 child: Icon(
-                  Icons.search,
+                  Icons.label,
                   size: 26.0,
                 ),
               )),
@@ -80,10 +90,17 @@ class _CreatePollState extends State<CreatePoll> {
 
   Widget textFormField() {
     return TextFormField(
-      controller: _textEditingController,
+      onChanged: (value) {
+        print('Value for field saved as "$value"');
+      },
       decoration: InputDecoration(
+          suffixIcon: IconButton(
+            onPressed: () => {print('add a photo button clicked')},
+            icon: Icon(Icons.add_a_photo),
+          ),
+          border: OutlineInputBorder(),
           labelText: 'Question',
-          hintText: 'Who is best cricketer? #Cricket#ICC'),
+          hintText: 'Who is the best cricketer? #Cricket#ICC'),
     );
   }
 
@@ -108,6 +125,9 @@ class _OptionsList extends State<OptionsList> {
       child: Column(
         children: <Widget>[
           TextFormField(
+            onChanged: (value) {
+              print('Value for field option as "$value"');
+            },
             decoration: InputDecoration(
               labelText: 'Option',
             ),
