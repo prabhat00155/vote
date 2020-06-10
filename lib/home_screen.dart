@@ -5,8 +5,6 @@ import 'favourites.dart';
 import 'mypolls.dart';
 import 'timeline.dart';
 
-final _backgroundColour = Colors.green[100];
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen();
 
