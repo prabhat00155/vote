@@ -1,58 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:vote/entity/create_poll.dart';
+
+var MAX_OPTIONS_ALLOWED = 4;
 
 class CreatePoll extends StatefulWidget {
   @override
   _CreatePollState createState() => _CreatePollState();
 }
 
-int _count = 1;
-List<String> optionsList = new List();
-String question = '';
-
 class _CreatePollState extends State<CreatePoll> {
-  final _textEditingController = TextEditingController();
+  int _count = 1;
+  String question = '';
+  List<TextEditingController> optionTextFieldControllers;
+  var quesTextFieldController;
+  bool _isAddOptionButtonDisabled = false;
 
   @override
   void dispose() {
+    //_count = 1;
     // Clean up the controller when the widget is disposed.
-    _textEditingController.dispose();
+    quesTextFieldController.dispose();
+    optionTextFieldControllers.forEach((element) {element.dispose();});
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> listOptions =
-        new List.generate(_count, (int i) => new OptionsList());
+    quesTextFieldController = TextEditingController();
+    optionTextFieldControllers = new List.generate(_count, (int i) => TextEditingController());
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Create Poll"),
-        leading: GestureDetector(
-          onTap: () {
-            /* Write listener code here */
-          },
-          child: Icon(
-            Icons.menu, // add custom icons also
-          ),
-        ),
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {},
-                child: Icon(
-                  Icons.label,
-                  size: 26.0,
-                ),
-              )),
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {},
-                child: Icon(Icons.send),
-              )),
-        ],
-      ),
+      appBar: appBar(),
       body: LayoutBuilder(builder: (context, constraint) {
         return Container(
           child: Column(
@@ -60,24 +39,19 @@ class _CreatePollState extends State<CreatePoll> {
               Container(
                 padding: EdgeInsets.all(20.0),
               ),
-              textFormField(),
+              quesTextFormField(),
               Container(
                 padding: EdgeInsets.all(20.0),
               ),
               Expanded(
-                child: Container(
-                  height: 200.0,
-                  child: ListView(
-                    shrinkWrap: false,
-                    children: listOptions,
-                    scrollDirection: Axis.vertical,
-                  ),
-                ),
+                child: ListView.builder(itemCount: _count, itemBuilder: (BuildContext ctxt, int index) {
+                  return optionContainer(index);
+                }),
               ),
               Align(
                 alignment: FractionalOffset.bottomCenter,
-                child: FlatButton(
-                  onPressed: _addNewOption,
+                child: RaisedButton(
+                  onPressed: _isAddOptionButtonDisabled ? null : _addNewOption,//_addNewOption,
                   child: Icon(Icons.add),
                 ),
               ),
@@ -88,11 +62,79 @@ class _CreatePollState extends State<CreatePoll> {
     );
   }
 
-  Widget textFormField() {
+  Widget appBar(){
+    return AppBar(
+      title: Text("Create Poll"),
+      leading: GestureDetector(
+        onTap: () {
+          /* Write listener code here */
+        },
+        child: Icon(
+          Icons.menu, // add custom icons also
+        ),
+      ),
+      actions: <Widget>[
+        Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {},
+              child: Icon(
+                Icons.label,
+                size: 26.0,
+              ),
+            )),
+        Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: savePoll,
+              child: Icon(Icons.send),
+            )),
+      ],
+    );
+  }
+
+  void savePoll(){
+    print('Saving object...');
+    List<String> options;
+    String ques = quesTextFieldController.text;
+    print('ques text is ' + ques + quesTextFieldController.text);
+
+    optionTextFieldControllers.forEach((element) {
+      if(element.text.isNotEmpty) {
+        //options[](element.text);
+        print('value of each controller is ' + element.text);
+      }
+    });
+
+
+    //CreatePollEntity createPollEntity = new CreatePollEntity(ques, options);
+
+  }
+
+  Widget optionContainer(index){
+    var myController = optionTextFieldControllers[index];
+
+    return Container(
+      width: 170.0,
+      padding: EdgeInsets.all(5.0),
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            controller: myController,
+            decoration: InputDecoration(
+              labelText: 'Option',
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(20.0),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget quesTextFormField() {
     return TextFormField(
-      onChanged: (value) {
-        print('Value for field saved as "$value"');
-      },
+      controller: quesTextFieldController,
       decoration: InputDecoration(
           suffixIcon: IconButton(
             onPressed: () => {print('add a photo button clicked')},
@@ -107,41 +149,9 @@ class _CreatePollState extends State<CreatePoll> {
   void _addNewOption() {
     setState(() {
       _count = _count + 1;
+      if(_count == MAX_OPTIONS_ALLOWED){
+        _isAddOptionButtonDisabled = true;
+      }
     });
-  }
-}
-
-class OptionsList extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => new _OptionsList();
-}
-
-class _OptionsList extends State<OptionsList> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 170.0,
-      padding: EdgeInsets.all(5.0),
-      child: Column(
-        children: <Widget>[
-          TextFormField(
-            onChanged: (value) {
-              print('Value for field option as "$value"');
-            },
-            decoration: InputDecoration(
-              labelText: 'Option',
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(20.0),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 }
