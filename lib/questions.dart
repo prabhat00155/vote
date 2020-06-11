@@ -5,41 +5,17 @@ class Question {
   final String questionId;
   final String userId;
   final String question;
-  final String option1;
-  final String option2;
-  final String option3;
-  final String option4;
-  final String option5;
-  final String vote1;
-  final String vote2;
-  final String vote3;
-  final String vote4;
-  final String vote5;
+  final List<String> options;
+  final List<String> votes;
   final String totalVotes;
   Question({
     this.questionId,
     this.userId,
     this.question,
-    this.option1,
-    this.option2,
-    this.option3,
-    this.option4,
-    this.option5,
-    this.vote1,
-    this.vote2,
-    this.vote3,
-    this.vote4,
-    this.vote5,
+    this.options,
+    this.votes,
     this.totalVotes,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'question': question,
-      'option1': option1,
-      'option2': option2,
-    };
-  }
 }
 
 List<Question> questions() {
@@ -59,16 +35,9 @@ Column displayPoll(data) {
         data.question,
         style: TextStyle(fontSize: 18.0),
       ),
-      displayOption(
-          data.option1, calculateFraction(data.vote1, data.totalVotes)),
-      displayOption(
-          data.option2, calculateFraction(data.vote2, data.totalVotes)),
-      displayOption(
-          data.option3, calculateFraction(data.vote3, data.totalVotes)),
-      displayOption(
-          data.option4, calculateFraction(data.vote4, data.totalVotes)),
-      displayOption(
-          data.option5, calculateFraction(data.vote5, data.totalVotes)),
+      for (int i = 0; i < data.options.length; i++)
+        displayOption(
+            data.options[i], calculateFraction(data.votes[i], data.totalVotes)),
     ],
   );
 }
@@ -121,16 +90,8 @@ Question parseRow(row) {
     questionId: items[0],
     userId: items[1],
     question: items[2],
-    option1: items[3],
-    option2: items[4],
-    option3: items[5],
-    option4: items[6],
-    option5: items[7],
-    vote1: items[8],
-    vote2: items[9],
-    vote3: items[10],
-    vote4: items[11],
-    vote5: items[12],
+    options: items.sublist(3, 8),
+    votes: items.sublist(8, 13),
     totalVotes: items[13],
   );
 }
