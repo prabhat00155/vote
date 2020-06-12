@@ -1,3 +1,7 @@
 /.dart_tool
 /.idea
 /build
+/.flutter-plugins
+/.flutter-plugins-dependencies
+/.packages
+/pubspec.lock
