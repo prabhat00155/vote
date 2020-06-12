@@ -119,10 +119,15 @@ class _CreatePollState extends State<CreatePoll> {
       padding: EdgeInsets.all(5.0),
       child: Column(
         children: <Widget>[
-          TextFormField(
+          TextField(
+            autofocus: true,
             controller: myController,
             decoration: InputDecoration(
               labelText: 'Option',
+              suffixIcon: _count>1 ? null : IconButton(
+                onPressed: () => {print('option add a photo button clicked')},
+                icon: Icon(Icons.add_a_photo),
+              ),
             ),
           ),
           Container(
@@ -132,12 +137,13 @@ class _CreatePollState extends State<CreatePoll> {
       ),
     );
   }
+
   Widget quesTextFormField() {
-    return TextFormField(
+    return TextField(
       controller: quesTextFieldController,
       decoration: InputDecoration(
           suffixIcon: IconButton(
-            onPressed: () => {print('add a photo button clicked')},
+            onPressed: () => {print('ques add a photo button clicked')},
             icon: Icon(Icons.add_a_photo),
           ),
           border: OutlineInputBorder(),
