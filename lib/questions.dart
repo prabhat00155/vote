@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+enum pageType {
+  mypolls,
+  favourites,
+  timeLine,
+}
+
 class Question {
   final String questionId;
   final String userId;
@@ -18,8 +24,20 @@ class Question {
   });
 }
 
-List<Question> questions() {
-  return dataToQuestion(data);
+List<Question> questions(page) {
+  List<Question> questions;
+  switch (page) {
+    case pageType.mypolls:
+      questions = dataToQuestion(mypollData);
+      break;
+    case pageType.favourites:
+      questions = dataToQuestion(favouritesData);
+      break;
+    case pageType.timeLine:
+      questions = dataToQuestion(favouritesData);
+      break;
+  }
+  return questions;
 }
 
 double calculateFraction(vote, total) {
@@ -51,7 +69,7 @@ Container displayOption(option, percent) {
         : LinearPercentIndicator(
             animation: true,
             animationDuration: 500,
-            width: 140.0,
+            width: 240.0,
             lineHeight: 20.0,
             percent: percent,
             center: Text(
@@ -65,7 +83,7 @@ Container displayOption(option, percent) {
   );
 }
 
-const List<String> data = [
+const List<String> mypollData = [
   "1,anon1,Is this app good?,Yes,No,,,,62,61,,,,123",
   "2,anon1,Are you happy with your life?,Yes,No,,,,76,69,,,,145",
   "3,anon1,Which is better?,Facebook,WhatsApp,TikTok,Instagram,Twitter,28,28,24,24,20,124",
@@ -76,6 +94,21 @@ const List<String> data = [
   "8,anon1,What's worse for body?,Sugar,Salt,,,,187,380,,,,567",
   "9,anon1,Your favourite sports?,Cricket,Football,Tennis,Formula 1,Badminton,99,99,86,86,62,432",
   "10,anon1,Whom would you say you idolise?,Mahatma Gandhi,John Lennon,Mother Teresa,Nelson Mandela,Martin Luther King Jr.,3,2,1,1,2,9",
+];
+
+const List<String> favouritesData = [
+  "18,anon1,Do you like working out?,Yes,No,may be,,,18,15,11,,,44",
+  "19,anon1,Do you like first dates?,Yes,No,may be,,,35,8,12,,,55",
+  "20,anon1,Do you like clubbing?,Yes,No,may be,,,22,39,27,,,88",
+  "21,anon1,Do you like dancing?,Yes,No,may be,,,34,44,21,,,99",
+  "22,anon1,Do you like singing?,Yes,No,may be,,,30,30,7,,,67",
+  "23,anon1,A car you wish you had?,Bugatti,Ferrari,Lamborghini,Aston Martin,Rolls Royce,129,73,84,113,166,565",
+  "24,anon1,Which language do you mostly use for coding?,C,C++,Java,Python,Other,10,10,8,10,6,44",
+  "25,anon1,What’s worse?,Corruption,Gerrymandering,Divisive politics,,,134,103,108,,,345",
+  "26,anon1,Cats or dogs?,Cats,Dogs,Neither,,,10,19,14,,,43",
+  "27,anon1,Your favourite genre of music?,Rock,Pop,Punk,Jazz,Heavy metal,79,79,69,69,49,345",
+  "28,anon1,Favourite actress?,Shraddha Kapoor,Disha Patani,Alia Bhatt,Deepika Padukone,Other,15,15,13,13,10,66",
+  "29,anon1,Favourite cuisine?,Indian,Italian,Chinese,Japanese,Thai,3,3,2,2,4,14",
 ];
 
 List<Question> dataToQuestion(data) {

@@ -7,7 +7,7 @@ class MyPolls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var mypolls = questions();
+    var mypolls = questions(pageType.mypolls);
     return Scaffold(
       appBar: AppBar(
         title: Text("My Polls"),
