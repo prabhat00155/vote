@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vote/entity/create_poll.dart';
 
-var MAX_OPTIONS_ALLOWED = 4;
+var MAX_OPTIONS_ALLOWED = 5;
 
 class CreatePoll extends StatefulWidget {
   @override
@@ -10,7 +10,6 @@ class CreatePoll extends StatefulWidget {
 
 class _CreatePollState extends State<CreatePoll> {
   int _count = 1;
-  String question = '';
   List<TextEditingController> optionTextFieldControllers;
   var quesTextFieldController;
   bool _isAddOptionButtonDisabled = false;
@@ -20,7 +19,9 @@ class _CreatePollState extends State<CreatePoll> {
     //_count = 1;
     // Clean up the controller when the widget is disposed.
     quesTextFieldController.dispose();
-    optionTextFieldControllers.forEach((element) {element.dispose();});
+    optionTextFieldControllers.forEach((element) {
+      element.dispose();
+    });
 
     super.dispose();
   }
@@ -28,7 +29,8 @@ class _CreatePollState extends State<CreatePoll> {
   @override
   Widget build(BuildContext context) {
     quesTextFieldController = TextEditingController();
-    optionTextFieldControllers = new List.generate(_count, (int i) => TextEditingController());
+    optionTextFieldControllers =
+        new List.generate(_count, (int i) => TextEditingController());
 
     return Scaffold(
       appBar: appBar(),
@@ -44,14 +46,17 @@ class _CreatePollState extends State<CreatePoll> {
                 padding: EdgeInsets.all(20.0),
               ),
               Expanded(
-                child: ListView.builder(itemCount: _count, itemBuilder: (BuildContext ctxt, int index) {
-                  return optionContainer(index);
-                }),
+                child: ListView.builder(
+                    itemCount: _count,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return optionContainer(index);
+                    }),
               ),
               Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: RaisedButton(
-                  onPressed: _isAddOptionButtonDisabled ? null : _addNewOption,//_addNewOption,
+                  onPressed: _isAddOptionButtonDisabled ? null : _addNewOption,
+                  //_addNewOption,
                   child: Icon(Icons.add),
                 ),
               ),
@@ -62,7 +67,7 @@ class _CreatePollState extends State<CreatePoll> {
     );
   }
 
-  Widget appBar(){
+  Widget appBar() {
     return AppBar(
       title: Text("Create Poll"),
       leading: GestureDetector(
@@ -93,25 +98,22 @@ class _CreatePollState extends State<CreatePoll> {
     );
   }
 
-  void savePoll(){
+  void savePoll() {
     print('Saving object...');
     List<String> options;
-    String ques = quesTextFieldController.text;
-    print('ques text is ' + ques + quesTextFieldController.text);
+    print('ques text is ' + quesTextFieldController.text);
 
     optionTextFieldControllers.forEach((element) {
-      if(element.text.isNotEmpty) {
+      if (element.text.isNotEmpty) {
         //options[](element.text);
         print('value of each controller is ' + element.text);
       }
     });
 
-
     //CreatePollEntity createPollEntity = new CreatePollEntity(ques, options);
-
   }
 
-  Widget optionContainer(index){
+  Widget optionContainer(index) {
     var myController = optionTextFieldControllers[index];
 
     return Container(
@@ -124,10 +126,13 @@ class _CreatePollState extends State<CreatePoll> {
             controller: myController,
             decoration: InputDecoration(
               labelText: 'Option',
-              suffixIcon: _count>1 ? null : IconButton(
-                onPressed: () => {print('option add a photo button clicked')},
-                icon: Icon(Icons.add_a_photo),
-              ),
+              suffixIcon: _count > 1
+                  ? null
+                  : IconButton(
+                      onPressed: () =>
+                          {print('option add a photo button clicked')},
+                      icon: Icon(Icons.add_a_photo),
+                    ),
             ),
           ),
           Container(
@@ -155,7 +160,7 @@ class _CreatePollState extends State<CreatePoll> {
   void _addNewOption() {
     setState(() {
       _count = _count + 1;
-      if(_count == MAX_OPTIONS_ALLOWED){
+      if (_count == MAX_OPTIONS_ALLOWED) {
         _isAddOptionButtonDisabled = true;
       }
     });
