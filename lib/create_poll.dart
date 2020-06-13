@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote/entity/create_poll.dart';
 
-var MAX_OPTIONS_ALLOWED = 5;
+const MAX_OPTIONS_ALLOWED = 5;
 
 class CreatePoll extends StatefulWidget {
   @override
@@ -9,6 +10,8 @@ class CreatePoll extends StatefulWidget {
 }
 
 class _CreatePollState extends State<CreatePoll> {
+  final databaseReference = Firestore.instance;
+
   int _count = 1;
   List<TextEditingController> optionTextFieldControllers;
   var quesTextFieldController;
@@ -100,17 +103,23 @@ class _CreatePollState extends State<CreatePoll> {
 
   void savePoll() {
     print('Saving object...');
-    List<String> options;
     print('ques text is ' + quesTextFieldController.text);
-
+    List<String> tags = extractTags();
+    List<String> options = List();
     optionTextFieldControllers.forEach((element) {
       if (element.text.isNotEmpty) {
-        //options[](element.text);
+        options.add(element.text);
         print('value of each controller is ' + element.text);
       }
     });
 
-    //CreatePollEntity createPollEntity = new CreatePollEntity(ques, options);
+    String ques = quesTextFieldController.text;
+
+    if (ques.isNotEmpty && options.isNotEmpty) {
+      CreatePollEntity createPollEntity =
+          new CreatePollEntity(tags, ques, options, 'test_user_1');
+      createRecord(createPollEntity);
+    }
   }
 
   Widget optionContainer(index) {
@@ -164,5 +173,23 @@ class _CreatePollState extends State<CreatePoll> {
         _isAddOptionButtonDisabled = true;
       }
     });
+  }
+
+  void createRecord(CreatePollEntity createPollEntity) async {
+    print('create record called for ' + createPollEntity.toString());
+    DocumentReference ref =
+        await databaseReference.collection("questions").add({
+      'Tags': createPollEntity.tags,
+      'question': createPollEntity.question,
+      'options': createPollEntity.options,
+      'total_vote': createPollEntity.totalVote,
+      'user_id': createPollEntity.userId,
+      'visibility': createPollEntity.visibility.toString(),
+    });
+    print(ref.documentID);
+  }
+
+  List<String> extractTags() {
+    return null;
   }
 }
