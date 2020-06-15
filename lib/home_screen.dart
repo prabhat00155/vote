@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:device_id/device_id.dart';
+
+import 'dart:async';
 
 import 'create_poll.dart';
 import 'favourites.dart';
@@ -13,7 +16,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _deviceid = 'Unknown';
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    initDeviceId();
+  }
+
   final PageStorageBucket bucket = PageStorageBucket();
   static const List<Widget> screens = <Widget>[
     Timeline(
@@ -60,5 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
         bucket: bucket,
       ),
     );
+  }
+
+  Future<void> initDeviceId() async {
+    String deviceId = await DeviceId.getID;
+    setState(() {
+      _deviceid = '$deviceId';
+    });
   }
 }
