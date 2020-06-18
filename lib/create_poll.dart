@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote/entity/create_poll.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 const MAX_OPTIONS_ALLOWED = 5;
 
@@ -17,9 +19,28 @@ class _CreatePollState extends State<CreatePoll> {
   var quesTextFieldController;
   bool _isAddOptionButtonDisabled = false;
 
+  File _takenImage;
+
+  Future<void> _takePicture() async {
+    print('take picture clicked');
+    final imageFile = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (imageFile == null) {
+      return;
+    }
+    setState(() {
+      _takenImage = imageFile;
+    });
+    //TODO -> save image to db
+    //below code can be used to upload image to db
+//    final appDir = await pPath.getApplicationDocumentsDirectory();
+//    final fileName = path.basename(imageFile.path);
+//    final savedImage = await imageFile.copy('${appDir.path}/$fileName');
+  }
+
   @override
   void dispose() {
-    //_count = 1;
     // Clean up the controller when the widget is disposed.
     quesTextFieldController.dispose();
     optionTextFieldControllers.forEach((element) {
@@ -45,6 +66,13 @@ class _CreatePollState extends State<CreatePoll> {
                 padding: EdgeInsets.all(20.0),
               ),
               quesTextFormField(),
+              if (_takenImage != null)
+                Container(
+                  height: 200.0,
+                  width: 200.0,
+                  child: Image.file(_takenImage),
+                  color: Colors.white10,
+                ),
               Container(
                 padding: EdgeInsets.all(20.0),
               ),
@@ -131,7 +159,6 @@ class _CreatePollState extends State<CreatePoll> {
       child: Column(
         children: <Widget>[
           TextField(
-            autofocus: true,
             controller: myController,
             decoration: InputDecoration(
               labelText: 'Option',
@@ -157,7 +184,7 @@ class _CreatePollState extends State<CreatePoll> {
       controller: quesTextFieldController,
       decoration: InputDecoration(
           suffixIcon: IconButton(
-            onPressed: () => {print('ques add a photo button clicked')},
+            onPressed: _takePicture,
             icon: Icon(Icons.add_a_photo),
           ),
           border: OutlineInputBorder(),
