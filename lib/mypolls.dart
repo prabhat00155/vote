@@ -7,17 +7,24 @@ class MyPolls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var mypolls = questions(pageType.mypolls);
     return Scaffold(
       appBar: AppBar(
         title: Text("My Polls"),
       ),
-      body: ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return Card(child: displayPoll(mypolls[index]));
-        },
-        itemCount: mypolls.length,
-      ),
+      body: FutureBuilder<List>(
+          future: fetchQuestions(),
+          initialData: List(),
+          builder: (context, snapshot) {
+            return snapshot.hasData
+                ? ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Card(child: displayPoll(snapshot.data[index]));
+                    })
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
+          }),
     );
   }
 }
