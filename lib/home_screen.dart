@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:device_id/device_id.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'dart:async';
 
@@ -16,13 +17,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   String _deviceid = 'Unknown';
+  bool _checkLocationEnabled = false;
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     initDeviceId();
+    checkLocationPermission();
+    getCurrentLocation();
   }
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -76,4 +81,26 @@ class _HomeScreenState extends State<HomeScreen> {
       _deviceid = '$deviceId';
     });
   }
+
+  Future<void> getCurrentLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    print(position == null
+        ? 'Unknown'
+        : position.latitude.toString() + ', ' + position.longitude.toString());
+
+  }
+
+  Future<void> checkLocationPermission() async {
+    GeolocationStatus geolocationStatus =
+        await Geolocator().checkGeolocationPermissionStatus();
+    //TODO if permission is not enabled pop up for permission and limited app feature warning
+    //check permission refer file GeolocationStatus
+    //iOS may have different check
+    setState(() {
+      _checkLocationEnabled = geolocationStatus != null ? "granted" == (geolocationStatus.value.toString()) : false;
+    });
+  }
 }
+
