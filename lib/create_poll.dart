@@ -100,14 +100,11 @@ class _CreatePollState extends State<CreatePoll> {
 
   Widget appBar() {
     return AppBar(
+      automaticallyImplyLeading: true,
       title: Text("Create Poll"),
-      leading: GestureDetector(
-        onTap: () {
-          /* Write listener code here */
-        },
-        child: Icon(
-          Icons.menu, // add custom icons also
-        ),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () => Navigator.pop(context, false),
       ),
       actions: <Widget>[
         Padding(

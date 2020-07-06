@@ -3,6 +3,8 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 import 'questions.dart';
 
+import 'questions.dart';
+
 class Timeline extends StatelessWidget {
   const Timeline({Key key}) : super(key: key);
 
