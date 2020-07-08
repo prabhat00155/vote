@@ -12,7 +12,7 @@ class Favourites extends StatelessWidget {
         title: Text("Favourites"),
       ),
       body: FutureBuilder<List>(
-          future: fetchQuestions(),
+          future: fetchQuestions("questions"),
           initialData: List(),
           builder: (context, snapshot) {
             return snapshot.hasData

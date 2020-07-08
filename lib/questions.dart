@@ -48,9 +48,9 @@ List<Option> _parseOption(options) {
   return res;
 }
 
-Future<List<Question>> fetchQuestions() async {
+Future<List<Question>> fetchQuestions(document) async {
   final databaseReference = Firestore.instance;
-  var ref = databaseReference.collection("questions");
+  var ref = databaseReference.collection(document);
   var querySnapshot = await ref.getDocuments();
   var questionsList = List<Question>();
   querySnapshot.documents.forEach((document) {
@@ -109,7 +109,7 @@ Container _displayOption(option, percent) {
               option,
               style: TextStyle(fontSize: 18.0),
             ),
-            linearStrokeCap: LinearStrokeCap.roundAll,
+            linearStrokeCap: LinearStrokeCap.butt,
             backgroundColor: Colors.grey[100],
             progressColor: Colors.blue[50],
           ),
